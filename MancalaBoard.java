@@ -10,14 +10,14 @@ public class MancalaBoard
 	private Player player2;
 	private ArrayList<ChangeListener> listeners;
 	
-	public MancalaBoard()
+	public MancalaBoard(int numStones)
 	{
-		initializeBoard();
+		initializeBoard(numStones);
 		player1 = new Player(true);
 		player2 = new Player(false);
 	}
 	
-	public void initializeBoard()
+	public void initializeBoard(int numStones)
 	{
 		board = new ArrayList<Pit>();
 		previousBoard = new ArrayList<Pit>();
@@ -26,11 +26,62 @@ public class MancalaBoard
 		{
 			if(i != 6 || i != 13)
 			{
-				board.add(new Pit(4, i));
+				board.add(new Pit(numStones, i));
 			}
 			else
 			{
 				board.add(new Pit(0, i));
+			}
+		}
+		
+		addCorrelation(board);
+	}
+	
+	public void addCorrelation(ArrayList<Pit> tempBoard)
+	{
+		int j = 12;
+		for(int i = 0; i < 6; i++)
+		{
+			tempBoard.get(i).setCorrelation(tempBoard.get(j));
+			j--;
+		}
+		for(int i = 0; i < 6; i++)
+		{
+			tempBoard.get(i).setPlayer(player1);
+		}
+		for(int i = 7; i < 13; i++)
+		{
+			tempBoard.get(i).setPlayer(player2);
+		}
+	}
+	
+	public void checkSteal(Player player, int lastPitNumber)
+	{
+		Pit pit = board.get(lastPitNumber);
+		if(player == player1)
+		{
+			if(pit.getPlayer() == player1 && pit.getSize() == 1)
+			{
+				if(pit.getCorrelation().getSize() != 0)
+				{
+					int numStones = pit.getCorrelation().getSize() + 1;
+					pit.emptyPit();
+					pit.getCorrelation().emptyPit();
+					board.get(6).addStones(numStones);
+				}
+			}
+		}
+		else if(player == player2)
+		{
+			if(pit.getPlayer() == player2 && pit.getSize() == 1)
+			{
+				if(pit.getCorrelation().getSize() != 0)
+				{
+					int numStones = pit.getCorrelation().getSize() + 1;
+					pit.emptyPit();
+					pit.getCorrelation().emptyPit();
+					board.get(13).addStones(numStones);
+				}
 			}
 		}
 	}
@@ -49,12 +100,12 @@ public class MancalaBoard
 		{
 			while(numberOfStones != 0)
 			{
+				pitNumber++;
 				if(pitNumber == 13)
 				{
-					pitNumber = -1;
+					pitNumber = 0;
 				}
 				lastPitNumber = pitNumber;
-				pitNumber++;
 				board.get(pitNumber).addStones(1);
 				numberOfStones--;
 			}
@@ -65,22 +116,22 @@ public class MancalaBoard
 			}
 		}
 		
-		if(player2.hasTurn())
+		else if(player2.hasTurn())
 		{
 			while(numberOfStones != 0)
 			{
-				while(numberOfStones != 0 && pitNumber < 14)
+				pitNumber++;
+				if(pitNumber == 14)
 				{
-					if(pitNumber == 6)
-					{
-						pitNumber++;
-					}
-					lastPitNumber = pitNumber;
-					pitNumber++;
-					board.get(pitNumber).addStones(1);
-					numberOfStones--;
+					pitNumber = 0;
 				}
-				pitNumber = 0;
+				if(pitNumber == 6)
+				{
+					pitNumber++;
+				}
+				lastPitNumber = pitNumber;
+				board.get(pitNumber).addStones(1);
+				numberOfStones--;
 			}
 			if(lastPitNumber != 13)
 			{
@@ -98,6 +149,7 @@ public class MancalaBoard
 			tempBoard.add(new Pit(board.get(i).getSize(), i));
 		}
 		previousBoard = tempBoard;
+		addCorrelation(previousBoard);
 	}
 	
 	public void setCurrentBoardToPreviousBoard()
@@ -108,6 +160,7 @@ public class MancalaBoard
 			tempBoard.add(new Pit(previousBoard.get(i).getSize(), i));
 		}
 		board = tempBoard;
+		addCorrelation(board);
 		previousBoard.clear();
 	}
 	
