@@ -111,6 +111,7 @@ public class MancalaBoard
 			}
 			if(lastPitNumber != 6)
 			{
+				checkSteal(player1, lastPitNumber);
 				player1.setTurn(false);
 				player2.setTurn(true);
 			}
@@ -135,6 +136,7 @@ public class MancalaBoard
 			}
 			if(lastPitNumber != 13)
 			{
+				checkSteal(player2, lastPitNumber);
 				player1.setTurn(true);
 				player2.setTurn(false);
 			}
