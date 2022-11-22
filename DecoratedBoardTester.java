@@ -42,19 +42,33 @@ public class DecoratedBoardTester {
         JButton clickToRun = new JButton("Add Stones");
 
 
+        JButton moveStones = new JButton("Move Stones");
+        moveStones.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                draw.setPitStone(0,2);
+                draw.repaint();
+            }
+        });
+
+
+
+
+
+
         clickToRun.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String number = userText.getText();
                 if (number.equals("3"))
                 {
-                    draw.setStones(3);
+                    draw.setAllPitStones(3);
                     draw.repaint();
                     userText.setVisible(false);
                     clickToRun.setVisible(false);
                 }
                 else if (number.equals("4")){
-                    draw.setStones(4);
+                    draw.setAllPitStones(4);
                     draw.repaint();
                     userText.setVisible(false);
                     clickToRun.setVisible(false);
@@ -66,6 +80,7 @@ public class DecoratedBoardTester {
         stoneControler.add(userText);
         stoneControler.add(clickToRun);
         panel.add(stoneControler);
+        panel.add(moveStones);
 
         frame.setLayout(new BorderLayout());
         frame.add(panel, BorderLayout.SOUTH);
