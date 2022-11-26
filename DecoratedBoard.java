@@ -12,8 +12,10 @@ public class DecoratedBoard extends JPanel {
     private int x = 450;
     private int y = 215;
     private int width = 80;
-    private int[] arr = new int[12];
+    private int[] arr = new int[14];
     private Point mousePoint;
+
+    //storing all pits in order to check which is selected with mouse when player presses
     private ArrayList<PitShape> pitShapes;
 
 
@@ -32,6 +34,7 @@ public class DecoratedBoard extends JPanel {
              mousePoint = event.getPoint();
             for (PitShape s : pitShapes)
             {
+                //its static only not dynamic
                 if (s.contains(mousePoint)){
                     setPitStone(0,0);
                     setPitStone(1,5);
@@ -45,6 +48,8 @@ public class DecoratedBoard extends JPanel {
                     setPitStone(8,4);
                     setPitStone(10,4);
                     setPitStone(11,4);
+                    setMancalaStone(1,10);
+                    setMancalaStone(2,1);
                 }
             }
 
@@ -77,6 +82,8 @@ public class DecoratedBoard extends JPanel {
             g2.setPaint(Color.BLACK);
             g2.setStroke(new BasicStroke(5));
             if (i < 6){
+                //create , draw and store pits inside array. i we need for
+                // changing position of x and i we need to set unique id for each pit
                 pitShape = new PitShape(i,x,y,width,i);
                 pitShape.draw(g2,x,y,i,width,new Color(204,204,204));
                 pitShapes.add(pitShape);
@@ -111,19 +118,6 @@ public class DecoratedBoard extends JPanel {
         Font font3 = new Font("Comic Sans MS", Font.BOLD, 24);
         g2.setFont(font3);
         g2.drawString("MANCALA BOARD", 635, 85);
-
-        g2.setColor(new Color(255,102,102));
-        /** Draw 3 stones */
-
-        for(int i=0;i<12;i++){
-            if (i < 6) {
-                drawStonesOfPit(g2, arr[i], 450 + i * 100, 240);
-            }else {
-                drawStonesOfPit(g2, arr[i], 450 + (i-6) * 100, 430);
-            }
-        }
-
-
         g2.setPaint(Color.BLACK);
         g2.setBackground(new Color(102,102,102));
         /** Mancala */
@@ -135,6 +129,28 @@ public class DecoratedBoard extends JPanel {
         g2.setPaint(new Color(102,102,102));
 
         g2.fillRect(1070, 200, 80, 350);
+
+        g2.setColor(new Color(255,102,102));
+
+        /** Draw stones */
+        for(int i=0;i<14;i++){
+            if (i < 6) {
+                drawStonesOfPit(g2, arr[i], 445 + i * 100, 230);
+            }else if(i>=6 && i<12) {
+                drawStonesOfPit(g2, arr[i], 445 + (i-6) * 100, 430);
+            }
+            if(i==12){
+                drawStonesOfMancala(g2, arr[12],320,300);
+            }
+            if(i==13){
+                drawStonesOfMancala(g2, arr[13],1070,300);
+            }
+        }
+
+
+
+
+
 
 
         g2.setColor(Color.BLACK);
@@ -149,28 +165,64 @@ public class DecoratedBoard extends JPanel {
         g2.setTransform(at2);
         g2.drawString("MANCALA A", 650, -2180);
     }
+
+    //draws stones inside pit
     public void drawStonesOfPit(Graphics2D g2, int numberOfStones,int xPit,int yPit){
+        //we need summer to make change x position
         int summer=0;
+        //we count stones for changing y after 6 stones
         int stoneCounter = 0;
         int y = yPit;
         for(int i=0;i<numberOfStones;i++){
+            //after 6 stones we change position of y
             if(stoneCounter == 6){
                 y = y+14;
                 summer = 0;
                 stoneCounter = 0;
             }
+            //everytime we add 12 to position of x
             summer=summer+12;
             g2.fillOval(xPit + summer, y, 10, 10);
             stoneCounter++;
         }
+
     }
 
+    public void drawStonesOfMancala(Graphics2D g2, int numberOfStones,int xPit,int yPit){
+        int x = 0;
+        int y = 0;
+        int counter = 0;
+
+        for(int i=0;i<numberOfStones;i++){
+            g2.fillOval(xPit+x, yPit+y, 10, 10);
+            x+=10;
+            counter++;
+            if(counter == 8){
+                y+=10;
+                counter = 0;
+                x=0;
+            }
+
+        }
+
+    }
+
+    //sets to the specific pit specific number of stones
     public void setPitStone(int pitNumber,int numberOfStones){
         arr[pitNumber] = numberOfStones;
     }
 
+    public void setMancalaStone(int mancalaNum, int numberOfStones){
+        if(mancalaNum == 1){
+            arr[12] = numberOfStones;
+        }else if(mancalaNum == 2){
+            arr[13] = numberOfStones;
+        }
+    }
+
+    //sets to all pits same number of stones
     public void setAllPitStones(int stoneNumber){
-        for(int i=0;i< arr.length;i++){
+        for(int i=0;i< 12;i++){
             arr[i]=stoneNumber;
         }
     }
