@@ -7,21 +7,17 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.awt.Shape;
 
 public class DecoratedBoard extends JPanel {
     private int x = 450;
     private int y = 215;
     private int width = 80;
-    private int[] arr = new int[14];
+    private MancalaBoard board = new MancalaBoard(0);
     private Point mousePoint;
-
-    //storing all pits in order to check which is selected with mouse when player presses
     private ArrayList<PitShape> pitShapes;
 
-
     public DecoratedBoard(int stones) {
-        //stoneNumber = stones;
-        //setAllPitStones(stoneNumber);
         pitShapes = new ArrayList<>();
         addMouseListener(new MousePressedListener());
 
@@ -34,27 +30,31 @@ public class DecoratedBoard extends JPanel {
              mousePoint = event.getPoint();
             for (PitShape s : pitShapes)
             {
-                //its static only not dynamic
-                if (s.contains(mousePoint)){
-                    setPitStone(0,0);
-                    setPitStone(1,5);
-                    setPitStone(2,5);
-                    setPitStone(3,5);
-                    setPitStone(4,5);
-                    setPitStone(5,4);
-                    setPitStone(6,4);
-                    setPitStone(7,4);
-                    setPitStone(8,4);
-                    setPitStone(8,4);
-                    setPitStone(10,4);
-                    setPitStone(11,4);
-                    setMancalaStone(1,10);
-                    setMancalaStone(2,1);
+                if (s.contains(mousePoint) && board.getBoard().get(s.getPitNum()).getSize() != 0 && s.getPlayer() == board.getPlayerWithTurn()){
+                	setPitStone(s.getPitNum());
+                	break;
                 }
             }
 
             repaint();
         }
+    }
+    
+    public void undo()
+    {
+    	board.undo();
+    }
+    
+    public String getTurn()
+    {
+    	if(board.getPlayerWithTurn() == board.getPlayer1())
+    	{
+    		return "Player A";
+    	}
+    	else
+    	{
+    		return "Player B";
+    	}
     }
 
     public void paintComponent(Graphics g) {
@@ -76,22 +76,27 @@ public class DecoratedBoard extends JPanel {
 //        pitShape.draw(g2,0,0,1,200,Color.RED);
 
         /** Pits */
-
-        for (int i = 0; i < 12; i++) {
+        int j = 12;
+        for (int i = 0; i < 13; i++) {
             PitShape pitShape;
             g2.setPaint(Color.BLACK);
             g2.setStroke(new BasicStroke(5));
-            if (i < 6){
-                //create , draw and store pits inside array. i we need for
-                // changing position of x and i we need to set unique id for each pit
-                pitShape = new PitShape(i,x,y,width,i);
-                pitShape.draw(g2,x,y,i,width,new Color(204,204,204));
+            if (i < 6)
+            {
+            	pitShape = new PitShape(i,x,y+200,width,i, board.getPlayer1());
+                pitShape.draw(g2,x,y+200,i,width,new Color(102,102,102));
                 pitShapes.add(pitShape);
             }
-            else{
-                pitShape = new PitShape(i,x,y+200,width,i-6);
-                pitShape.draw(g2,x,y+200,i-6,width,new Color(102,102,102));
+            else
+            {
+            	if(i == 6)
+            	{
+            		i++;
+            	}
+            	pitShape = new PitShape(j,x,y,width,i-7,board.getPlayer2());
+                pitShape.draw(g2,x,y,i-7,width,new Color(204,204,204));
                 pitShapes.add(pitShape);
+                j--;
             }
         }
 
@@ -118,6 +123,30 @@ public class DecoratedBoard extends JPanel {
         Font font3 = new Font("Comic Sans MS", Font.BOLD, 24);
         g2.setFont(font3);
         g2.drawString("MANCALA BOARD", 635, 85);
+        
+        g2.drawString("It is " + getTurn() + "'s turn", 635, 875);
+        if(board.isFinished())
+        {
+        	g2.drawString(board.checkWinner(), 635, 925);
+        }
+
+        g2.setColor(new Color(255,102,102));
+        /** Draw 3 stones */
+
+        j = 7;
+        for(int i=0;i<6;i++){
+            {
+            	drawStonesOfPit(g2, board.getBoard().get(i).getSize(), 450 + (i) * 100, 430);
+            }
+        }
+        for(int i = 12; i > 6; i--)
+        {
+        	drawStonesOfPit(g2, board.getBoard().get(j).getSize(), 450 + (i-7) * 100, 240);
+        	j++;
+        }
+        
+        //test();
+
         g2.setPaint(Color.BLACK);
         g2.setBackground(new Color(102,102,102));
         /** Mancala */
@@ -131,28 +160,9 @@ public class DecoratedBoard extends JPanel {
         g2.fillRect(1070, 200, 80, 350);
 
         g2.setColor(new Color(255,102,102));
-
-        /** Draw stones */
-        for(int i=0;i<14;i++){
-            if (i < 6) {
-                drawStonesOfPit(g2, arr[i], 445 + i * 100, 230);
-            }else if(i>=6 && i<12) {
-                drawStonesOfPit(g2, arr[i], 445 + (i-6) * 100, 430);
-            }
-            if(i==12){
-                drawStonesOfMancala(g2, arr[12],320,300);
-            }
-            if(i==13){
-                drawStonesOfMancala(g2, arr[13],1070,300);
-            }
-        }
-
-
-
-
-
-
-
+        drawStonesOfMancala(g2, board.getBoard().get(13).getSize(),320,300);
+        drawStonesOfMancala(g2, board.getBoard().get(6).getSize(),1070,300);
+        
         g2.setColor(Color.BLACK);
 
         AffineTransform at = new AffineTransform();
@@ -165,29 +175,23 @@ public class DecoratedBoard extends JPanel {
         g2.setTransform(at2);
         g2.drawString("MANCALA A", 650, -2180);
     }
-
-    //draws stones inside pit
+    
     public void drawStonesOfPit(Graphics2D g2, int numberOfStones,int xPit,int yPit){
-        //we need summer to make change x position
         int summer=0;
-        //we count stones for changing y after 6 stones
         int stoneCounter = 0;
         int y = yPit;
         for(int i=0;i<numberOfStones;i++){
-            //after 6 stones we change position of y
             if(stoneCounter == 6){
                 y = y+14;
                 summer = 0;
                 stoneCounter = 0;
             }
-            //everytime we add 12 to position of x
             summer=summer+12;
             g2.fillOval(xPit + summer, y, 10, 10);
             stoneCounter++;
         }
-
     }
-
+    
     public void drawStonesOfMancala(Graphics2D g2, int numberOfStones,int xPit,int yPit){
         int x = 0;
         int y = 0;
@@ -202,32 +206,29 @@ public class DecoratedBoard extends JPanel {
                 counter = 0;
                 x=0;
             }
-
-        }
-
-    }
-
-    //sets to the specific pit specific number of stones
-    public void setPitStone(int pitNumber,int numberOfStones){
-        arr[pitNumber] = numberOfStones;
-    }
-
-    public void setMancalaStone(int mancalaNum, int numberOfStones){
-        if(mancalaNum == 1){
-            arr[12] = numberOfStones;
-        }else if(mancalaNum == 2){
-            arr[13] = numberOfStones;
         }
     }
 
-    //sets to all pits same number of stones
+    public void setPitStone(int pitNumber){
+        board.moveStones(board.getBoard().get(pitNumber));
+    }
+
     public void setAllPitStones(int stoneNumber){
-        for(int i=0;i< 12;i++){
-            arr[i]=stoneNumber;
-        }
+        //for(int i=0;i< arr.length;i++){
+        //    arr[i]=stoneNumber;
+        //}
+        
+        board.setBoard(stoneNumber);
     }
-
-
+    
+    public void test()
+    {
+    	for(int i = 0; i < 14; i++)
+    	{
+    		System.out.print(board.getBoard().get(i).getSize() + " ");
+    	}
+    	System.out.println();
+    }
 
 
 }
