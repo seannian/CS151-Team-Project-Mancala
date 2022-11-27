@@ -9,32 +9,40 @@ public class MancalaBoard
 	private Player player1;
 	private Player player2;
 	private ArrayList<ChangeListener> listeners;
+	private boolean finished;
 	
 	public MancalaBoard(int numStones)
 	{
-		initializeBoard(numStones);
+		finished = false;
 		player1 = new Player(true);
 		player2 = new Player(false);
+		initializeBoard();
+		System.out.println("Player A turn: " + player1.hasTurn());
+		System.out.println("Player B turn: " + player2.hasTurn());
 	}
 	
-	public void initializeBoard(int numStones)
+	public void initializeBoard()
 	{
 		board = new ArrayList<Pit>();
 		previousBoard = new ArrayList<Pit>();
 		
 		for(int i = 0; i < 14; i++)
 		{
-			if(i != 6 || i != 13)
-			{
-				board.add(new Pit(numStones, i));
-			}
-			else
-			{
-				board.add(new Pit(0, i));
-			}
+			board.add(new Pit(0, i));
 		}
 		
 		addCorrelation(board);
+	}
+	
+	public void setBoard(int numStones)
+	{
+		for(int i = 0; i < 14; i++)
+		{
+			if(i != 6 && i != 13)
+			{
+				board.get(i).addStones(numStones);
+			}
+		}
 	}
 	
 	public void addCorrelation(ArrayList<Pit> tempBoard)
@@ -64,6 +72,7 @@ public class MancalaBoard
 			{
 				if(pit.getCorrelation().getSize() != 0)
 				{
+					System.out.println(pit.getPlayer() + " has stolen marbles!");
 					int numStones = pit.getCorrelation().getSize() + 1;
 					pit.emptyPit();
 					pit.getCorrelation().emptyPit();
@@ -116,8 +125,7 @@ public class MancalaBoard
 				player2.setTurn(true);
 			}
 		}
-		
-		else if(player2.hasTurn())
+		else
 		{
 			while(numberOfStones != 0)
 			{
@@ -141,6 +149,31 @@ public class MancalaBoard
 				player2.setTurn(false);
 			}
 		}
+		
+		if(player1SideEmpty())
+		{
+			emptyPlayer2Side();
+		}
+		else if(player2SideEmpty())
+		{
+			emptyPlayer1Side();
+		}
+		
+		if(!checkIfBoardIsEmpty())
+		{
+			System.out.println("Player A turn: " + player1.hasTurn());
+			System.out.println("Player B turn: " + player2.hasTurn());
+		}
+		else
+		{
+			System.out.println(checkWinner());
+			finished = true;
+		}
+	}
+	
+	public boolean isFinished()
+	{
+		return finished;
 	}
 	
 	public void setPreviousBoard()
@@ -169,6 +202,12 @@ public class MancalaBoard
 	//The player that JUST made a move can undo before the other player makes their move
 	public void undo()
 	{
+		if(previousBoard.isEmpty())
+		{
+			System.out.println("Cannot undo as the previous board has already been undone!");
+			return;
+		}
+		
 		Player player;
 		Player otherPlayer;
 		if(!player1.hasTurn())
@@ -188,5 +227,109 @@ public class MancalaBoard
 			player.setTurn(true);
 			otherPlayer.setTurn(false);
 		}
+	}
+	
+	public boolean checkIfBoardIsEmpty()
+	{
+		boolean check = true;
+		for(int i = 0; i < 14; i++)
+		{
+			if(board.get(i).getSize() != 0 && i != 6 && i != 13)
+			{
+				check = false;
+			}
+		}
+		return check;
+	}
+	
+	public boolean player1SideEmpty()
+	{
+		boolean check = true;
+		for(int i = 0; i < 6; i++)
+		{
+			if(board.get(i).getSize() != 0)
+			{
+				check = false;
+			}
+		}
+		return check;
+	}
+	
+	public boolean player2SideEmpty()
+	{
+		boolean check = true;
+		for(int i = 7; i < 13; i++)
+		{
+			if(board.get(i).getSize() != 0)
+			{
+				check = false;
+			}
+		}
+		return check;
+	}
+	
+	public void emptyPlayer1Side()
+	{
+		int size = 0;
+		for(int i = 0; i < 6; i++)
+		{
+			size += board.get(i).getSize();
+			board.get(i).emptyPit();
+		}
+		board.get(6).addStones(size);
+	}
+	
+	public void emptyPlayer2Side()
+	{
+		int size = 0;
+		for(int i = 7; i < 13; i++)
+		{
+			size += board.get(i).getSize();
+			board.get(i).emptyPit();
+		}
+		board.get(13).addStones(size);
+	}
+	
+	public String checkWinner()
+	{
+		if(board.get(6).getSize() > board.get(13).getSize())
+		{
+			return "Player A has won!";
+		}
+		else if(board.get(6).getSize() < board.get(13).getSize())
+		{
+			return "Player B has won!";
+		}
+		else
+		{
+			return "It's a tie!";
+		}
+	}
+	
+	public ArrayList<Pit> getBoard()
+	{
+		return board;
+	}
+	
+	public Player getPlayerWithTurn()
+	{
+		if(player1.hasTurn())
+		{
+			return player1;
+		}
+		else
+		{
+			return player2;
+		}
+	}
+	
+	public Player getPlayer1()
+	{
+		return player1;
+	}
+	
+	public Player getPlayer2()
+	{
+		return player2;
 	}
 }
