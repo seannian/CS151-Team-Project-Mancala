@@ -9,6 +9,7 @@ public class Pit
 	
 	public Pit(int numberOfStones, int pitNumber)
 	{
+		stones = new ArrayList<Stone>();
 		this.pitNumber = pitNumber;
 		for(int i = 0; i < numberOfStones; i++)
 		{
