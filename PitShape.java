@@ -7,12 +7,15 @@ public class PitShape {
     private int y;
     private int width;
     private int pitNum;
-    public PitShape(int pitNum,int x, int y, int width,int i)
+    private Player player;
+    
+    public PitShape(int pitNum,int x, int y, int width,int i, Player player)
     {
         this.x = x+i*100;
         this.y = y;
         this.width = width;
         this.pitNum = pitNum;
+        this.player = player;
     }
 
     public void draw(Graphics2D g2,int x,int y,int i, int width, Color color)
@@ -46,14 +49,19 @@ public class PitShape {
     public void setWidth(int width) {
         this.width = width;
     }
-
+    
     public boolean contains(Point2D p)
     {
         return getX() <= p.getX() && p.getX() <= getX() + getWidth()
-                && getY() <= p.getY() && p.getY() <= getY() + getWidth() / 2;
+                && getY() <= p.getY() && p.getY() <= getY() + getWidth();
     }
 
     public int getPitNum(){
         return pitNum;
     };
+    
+    public Player getPlayer()
+    {
+    	return player;
+    }
 }
