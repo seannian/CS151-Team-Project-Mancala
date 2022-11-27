@@ -28,7 +28,15 @@ public class DecoratedBoardTester {
 
         JLabel undoLabel = new JLabel("You Have Undo " + count + " Times");
         JButton undoButton = new JButton("Undo");
-        //undoButton.addActionListener(this);
+        undoButton.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		draw.undo();
+        		draw.repaint();
+        	}
+        });
+        
         panel.add(undoLabel);
         panel.add(undoButton);
 
@@ -42,14 +50,14 @@ public class DecoratedBoardTester {
         JButton clickToRun = new JButton("Add Stones");
 
 
-        JButton moveStones = new JButton("Move Stones");
+       /* JButton moveStones = new JButton("Move Stones");
         moveStones.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                draw.setPitStone(0,2);
+                //draw.setPitStone(0,2);
                 draw.repaint();
             }
-        });
+        });*/
 
 
 
@@ -66,12 +74,14 @@ public class DecoratedBoardTester {
                     draw.repaint();
                     userText.setVisible(false);
                     clickToRun.setVisible(false);
+                    inputLabel.setVisible(false);
                 }
                 else if (number.equals("4")){
                     draw.setAllPitStones(4);
                     draw.repaint();
                     userText.setVisible(false);
                     clickToRun.setVisible(false);
+                    inputLabel.setVisible(false);
                 }
             }
         });
@@ -80,7 +90,7 @@ public class DecoratedBoardTester {
         stoneControler.add(userText);
         stoneControler.add(clickToRun);
         panel.add(stoneControler);
-        panel.add(moveStones);
+        //panel.add(moveStones);
 
         frame.setLayout(new BorderLayout());
         frame.add(panel, BorderLayout.SOUTH);
