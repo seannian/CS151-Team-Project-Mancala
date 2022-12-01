@@ -7,9 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class DecoratedBoardTester {
-    static int count = 0;
     static int stoneNumber;
 
     private static JFrame frame;
@@ -26,19 +27,24 @@ public class DecoratedBoardTester {
         panel.setBorder(BorderFactory.createEmptyBorder(50, 200, 50, 200));
         panel.setLayout(new GridLayout(0, 1));
 
-        JLabel undoLabel = new JLabel("You Have Undo " + count + " Times");
         JButton undoButton = new JButton("Undo");
         undoButton.addActionListener(new ActionListener()
         {
         	public void actionPerformed(ActionEvent e)
         	{
         		draw.undo();
-        		draw.repaint();
         	}
         });
-        
-        panel.add(undoLabel);
         panel.add(undoButton);
+        
+        ChangeListener repaint = new ChangeListener()
+		{
+			public void stateChanged(ChangeEvent event)
+			{
+				draw.repaint();
+			}
+		};
+		draw.attach(repaint);
 
         JLabel inputLabel = new JLabel("Enter the number of stones——3 or 4 (and return): ");
         inputLabel.setBounds(100, 100, 100, 50);
@@ -49,21 +55,6 @@ public class DecoratedBoardTester {
 
         JButton clickToRun = new JButton("Add Stones");
 
-
-       /* JButton moveStones = new JButton("Move Stones");
-        moveStones.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //draw.setPitStone(0,2);
-                draw.repaint();
-            }
-        });*/
-
-
-
-
-
-
         clickToRun.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -71,14 +62,12 @@ public class DecoratedBoardTester {
                 if (number.equals("3"))
                 {
                     draw.setAllPitStones(3);
-                    draw.repaint();
                     userText.setVisible(false);
                     clickToRun.setVisible(false);
                     inputLabel.setVisible(false);
                 }
                 else if (number.equals("4")){
                     draw.setAllPitStones(4);
-                    draw.repaint();
                     userText.setVisible(false);
                     clickToRun.setVisible(false);
                     inputLabel.setVisible(false);
