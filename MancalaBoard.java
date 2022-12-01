@@ -135,8 +135,8 @@ public class MancalaBoard
 				checkSteal(player1, lastPitNumber);
 				player1.setTurn(false);
 				player2.setTurn(true);
-				playerWithLastTurn = player1;
 			}
+			playerWithLastTurn = player1;
 		}
 		else
 		{
@@ -160,8 +160,8 @@ public class MancalaBoard
 				checkSteal(player2, lastPitNumber);
 				player1.setTurn(true);
 				player2.setTurn(false);
-				playerWithLastTurn = player2;
 			}
+			playerWithLastTurn = player2;
 		}
 		
 		if(player1SideEmpty())
