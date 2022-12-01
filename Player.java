@@ -25,7 +25,7 @@ public class Player
 	{
 		return undosLeft;
 	}
-	
+
 	public void removeUndo()
 	{
 		undosLeft--;
