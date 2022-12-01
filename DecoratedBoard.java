@@ -1,17 +1,14 @@
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.awt.Shape;
 
-public class DecoratedBoard extends JPanel {
+public class DecoratedBoard extends JPanel implements BoardDesigner{
     private int x = 450;
     private int y = 215;
     private int width = 80;
@@ -19,7 +16,7 @@ public class DecoratedBoard extends JPanel {
     private Point mousePoint;
     private ArrayList<PitShape> pitShapes;
 
-    public DecoratedBoard(int stones) 
+    public DecoratedBoard() 
     {
         pitShapes = new ArrayList<>();
         addMouseListener(new MousePressedListener());
@@ -169,12 +166,12 @@ public class DecoratedBoard extends JPanel {
         AffineTransform at = new AffineTransform();
         at.setToRotation(-Math.toRadians(90), 80, 100);
         g2.setTransform(at);
-        g2.drawString("MANCALA B", -645, 605);
+        g2.drawString("MANCALA B", -300, 320);
 
         AffineTransform at2 = new AffineTransform();
         at2.setToRotation(Math.toRadians(90), 80, 100);
         g2.setTransform(at2);
-        g2.drawString("MANCALA A", 650, -2180);
+        g2.drawString("MANCALA A", 300, -1000);
     }
     
     public void drawStonesOfPit(Graphics2D g2, int numberOfStones,int xPit,int yPit)
@@ -225,15 +222,4 @@ public class DecoratedBoard extends JPanel {
     {
         board.setBoard(stoneNumber);
     }
-    
-    public void test()
-    {
-    	for(int i = 0; i < 14; i++)
-    	{
-    		System.out.print(board.getBoard().get(i).getSize() + " ");
-    	}
-    	System.out.println();
-    }
-
-
 }
