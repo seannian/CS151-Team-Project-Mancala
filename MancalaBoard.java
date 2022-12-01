@@ -8,17 +8,25 @@ public class MancalaBoard
 	private ArrayList<Pit> previousBoard;
 	private Player player1;
 	private Player player2;
+	private Player playerWithLastTurn;
 	private ArrayList<ChangeListener> listeners;
 	private boolean finished;
 	
 	public MancalaBoard(int numStones)
 	{
 		finished = false;
+		listeners = new ArrayList<ChangeListener>();
 		player1 = new Player(true);
+		playerWithLastTurn = player1;
 		player2 = new Player(false);
 		initializeBoard();
 		System.out.println("Player A turn: " + player1.hasTurn());
 		System.out.println("Player B turn: " + player2.hasTurn());
+	}
+	
+	public void attach(ChangeListener listener)
+	{
+		listeners.add(listener);
 	}
 	
 	public void initializeBoard()
@@ -42,6 +50,11 @@ public class MancalaBoard
 			{
 				board.get(i).addStones(numStones);
 			}
+		}
+		ChangeEvent event = new ChangeEvent(this);
+		for (ChangeListener listener : listeners)
+		{
+			listener.stateChanged(event);
 		}
 	}
 	
@@ -95,7 +108,6 @@ public class MancalaBoard
 		}
 	}
 	
-	//Make sure that they don't click on an empty pit, or the opponent's pit
 	public void moveStones(Pit pit)
 	{
 		setPreviousBoard();
@@ -123,6 +135,7 @@ public class MancalaBoard
 				checkSteal(player1, lastPitNumber);
 				player1.setTurn(false);
 				player2.setTurn(true);
+				playerWithLastTurn = player1;
 			}
 		}
 		else
@@ -147,6 +160,7 @@ public class MancalaBoard
 				checkSteal(player2, lastPitNumber);
 				player1.setTurn(true);
 				player2.setTurn(false);
+				playerWithLastTurn = player2;
 			}
 		}
 		
@@ -168,6 +182,12 @@ public class MancalaBoard
 		{
 			System.out.println(checkWinner());
 			finished = true;
+		}
+		
+		ChangeEvent event = new ChangeEvent(this);
+		for (ChangeListener listener : listeners)
+		{
+			listener.stateChanged(event);
 		}
 	}
 	
@@ -222,10 +242,27 @@ public class MancalaBoard
 		}
 		if(player.getUndosLeft() > 0)
 		{
-			player.removeUndo();
 			setCurrentBoardToPreviousBoard();
-			player.setTurn(true);
-			otherPlayer.setTurn(false);
+			if(playerWithLastTurn == player)
+			{
+				player.removeUndo();
+				player.setTurn(true);
+				otherPlayer.setTurn(false);
+			}
+			else
+			{
+				otherPlayer.removeUndo();
+			}
+			if(finished)
+			{
+				finished = false;
+			}
+		}
+		
+		ChangeEvent event = new ChangeEvent(this);
+		for (ChangeListener listener : listeners)
+		{
+			listener.stateChanged(event);
 		}
 	}
 	
@@ -321,6 +358,11 @@ public class MancalaBoard
 		{
 			return player2;
 		}
+	}
+	
+	public Player getPlayerWithLastTurn()
+	{
+		return playerWithLastTurn;
 	}
 	
 	public Player getPlayer1()
