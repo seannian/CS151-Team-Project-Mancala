@@ -13,7 +13,6 @@ public class RectangleBoard extends JPanel implements BoardDesigner{
     private int x = 450;
     private int y = 215;
     private int width = 84;
-    private int[] arr = new int[14];
     private Point mousePoint;
     private MancalaBoard board = new MancalaBoard(0);
 
@@ -21,12 +20,9 @@ public class RectangleBoard extends JPanel implements BoardDesigner{
     private ArrayList<PitShape> pitShapes;
 
 
-    public RectangleBoard(int stones) {
-        //stoneNumber = stones;
-        //setAllPitStones(stoneNumber);
+    public RectangleBoard() {
         pitShapes = new ArrayList<>();
         addMouseListener(new MousePressedListener());
-
     }
 
     private class MousePressedListener extends MouseAdapter {
@@ -151,8 +147,6 @@ public class RectangleBoard extends JPanel implements BoardDesigner{
             j++;
         }
 
-        //test();
-
         g2.setPaint(Color.BLACK);
         g2.setBackground(new Color(102,102,102));
         /** Mancala */
@@ -174,12 +168,12 @@ public class RectangleBoard extends JPanel implements BoardDesigner{
         AffineTransform at = new AffineTransform();
         at.setToRotation(-Math.toRadians(90), 80, 100);
         g2.setTransform(at);
-        g2.drawString("MANCALA B", -645, 605);
+        g2.drawString("MANCALA B", -300, 320);
 
         AffineTransform at2 = new AffineTransform();
         at2.setToRotation(Math.toRadians(90), 80, 100);
         g2.setTransform(at2);
-        g2.drawString("MANCALA A", 650, -2180);
+        g2.drawString("MANCALA A", 300, -1000);
     }
 
     //draws stones inside pit
@@ -218,9 +212,7 @@ public class RectangleBoard extends JPanel implements BoardDesigner{
                 counter = 0;
                 x=0;
             }
-
         }
-
     }
 
     public void setPitStone(int pitNumber)
@@ -232,10 +224,4 @@ public class RectangleBoard extends JPanel implements BoardDesigner{
     {
         board.setBoard(stoneNumber);
     }
-
-
-
-
-
-
 }
