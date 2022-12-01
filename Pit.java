@@ -1,87 +1,62 @@
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.util.*;
 
-public class PitShape {
-    private int x;
-    private int y;
-    private int width;
-    private int pitNum;
-    private int numberOfStones;
-    public PitShape(int pitNum,int x, int y, int width,int i)
-    {
-        if(x==320){
-            this.x = x;
-        }else{
-            this.x = x+i*100;
-        }
-        this.y = y;
-        this.width = width;
-        this.pitNum = pitNum;
-    }
+public class Pit 
+{
+	private ArrayList<Stone> stones;
+	private Player player;
+	private int pitNumber;
+	private Pit correlation;
 
-    public void draw(Graphics2D g2,int x,int y,int i, int width, Color color)
-    {
+	public Pit(int numberOfStones, int pitNumber)
+	{
+		stones = new ArrayList<Stone>();
+		this.pitNumber = pitNumber;
+		for(int i = 0; i < numberOfStones; i++)
+		{
+			stones.add(new Stone());
+		}
+	}
 
-        if(width == 80) {
-            g2.drawOval(x + i * 100, y, width, width);
-            g2.setPaint(color);
-            g2.fillOval(x + i * 100, y, width, width);
-        }else if(width == 84){
-            g2.drawRect(x + i * 100, y, width, width);
-            g2.setPaint(color);
-            g2.fillRect(x + i * 100, y, width, width);
-        }
-        else{
-            g2.setBackground(color);
-            g2.drawRect(x, y, width, width+260);
-            g2.fillRect(x, y, width, width+260);
-        }
-    }
+	public int getSize()
+	{
+		return stones.size();
+	}
 
-    public int getX() {
-        return x;
-    }
+	public int getPitNumber()
+	{
+		return pitNumber;
+	}
 
-    public void setX(int x) {
-        this.x = x;
-    }
+	public void emptyPit()
+	{
+		stones.clear();
+	}
 
-    public int getY() {
-        return y;
-    }
+	public void addStones(int number)
+	{
+		for(int i = 0; i < number; i++) 
+		{
+			stones.add(new Stone());
+		}
+	}
 
-    public void setY(int y) {
-        this.y = y;
-    }
+	public void setCorrelation(Pit pit)
+	{
+		this.correlation = pit;
+		pit.correlation = this;
+	}
 
-    public int getWidth() {
-        return width;
-    }
+	public Pit getCorrelation()
+	{
+		return correlation;
+	}
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
+	public void setPlayer(Player player)
+	{
+		this.player = player;
+	}
 
-    public boolean contains(Point2D p)
-    {
-        return getX() <= p.getX() && p.getX() <= getX() + getWidth()
-                && getY() <= p.getY() && p.getY() <= getY() + getWidth() / 2;
-    }
-
-    public int getPitNum(){
-        return pitNum;
-    };
-
-    public void setPitNum(int pitNum) {
-        this.pitNum = pitNum;
-    }
-
-    public int getNumberOfStones() {
-        return numberOfStones;
-    }
-
-    public void setNumberOfStones(int numberOfStones) {
-        this.numberOfStones = numberOfStones;
-    }
-}
+	public Player getPlayer()
+	{
+		return player;
+	}
