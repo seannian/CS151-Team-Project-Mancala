@@ -1,4 +1,11 @@
-
+/**
+ * Fall 2022 CS151 Team Project
+ * Simple Mancala Board
+ * Instructor: Dr. Suneuy Kim
+ * 
+ * @author Sean Nian, Abdugafur Dalerzoda, Xianqiao Zhang, Aarushi  Gautam
+ * @version 1.0 12/1/2022
+ */
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -7,10 +14,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+/**
+ * The main tester class of the project.
+ */
 public class DecoratedBoardTester 
 {
     private static JFrame frame;
 
+    /**
+     * Will create a frame which asks the user to select a style, and then display another frame with that style as a mancala board.
+     */
     public static void main(String[] args) {
     	//final BoardDesigner draw;
     	
