@@ -1,3 +1,12 @@
+/**
+ * Fall 2022 CS151 Team Project
+ * Simple Mancala Board
+ * Instructor: Dr. Suneuy Kim
+ * 
+ * @author Sean Nian, Abdugafur Dalerzoda, Xianqiao Zhang, Aarushi  Gautam
+ * @version 1.0 12/1/2022
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -8,9 +17,16 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * BoardFrame creates a frame that contains buttons and the mancala board for the selected design 
+ */
 public class BoardFrame extends JFrame
 {
 	BoardDesigner draw;
+	/**
+	 * The main method will allow the user to interact with the mancala board using buttons.
+	 * @param draw
+	 */
 	public BoardFrame(BoardDesigner draw)
 	{
 		this.draw = draw;
