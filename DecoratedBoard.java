@@ -1,3 +1,11 @@
+/**
+ * Fall 2022 CS151 Team Project
+ * Simple Mancala Board
+ * Instructor: Dr. Suneuy Kim
+ * 
+ * @author Sean Nian, Abdugafur Dalerzoda, Xianqiao Zhang, Aarushi  Gautam
+ * @version 1.0 12/1/2022
+ */
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -8,6 +16,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+/**
+ * The DecoratedBoard class contains the circle design of the mancala board
+ */
 public class DecoratedBoard extends JPanel implements BoardDesigner{
     private int x = 450;
     private int y = 215;
@@ -16,12 +27,19 @@ public class DecoratedBoard extends JPanel implements BoardDesigner{
     private Point mousePoint;
     private ArrayList<PitShape> pitShapes;
 
+    /**
+     * Creates and initializes the decorated board with a MancalaBoard.
+     */
     public DecoratedBoard() 
     {
         pitShapes = new ArrayList<>();
         addMouseListener(new MousePressedListener());
     }
 
+    /**
+     * Creates the mouse listener needed to interact with the board
+     * The view in the MVC model
+     */
     private class MousePressedListener extends MouseAdapter 
     {
         @Override
@@ -38,16 +56,28 @@ public class DecoratedBoard extends JPanel implements BoardDesigner{
         }
     }
     
+    /**
+     * Attaches a ChangeListener (view) to the board
+     * @param listener - the listener being attached
+     * postcondition: a change listener will be added to the board
+     */
     public void attach(ChangeListener listener)
     {
     	board.attach(listener);
     }
     
+    /**
+     * Undos the board to the previous board
+     */
     public void undo()
     {
     	board.undo();
     }
     
+    /**
+     * Returns the player with the turn.
+     * return @String - returns the player with the turn
+     */
     public String getTurn()
     {
     	if(board.getPlayerWithTurn() == board.getPlayer1())
@@ -60,6 +90,10 @@ public class DecoratedBoard extends JPanel implements BoardDesigner{
     	}
     }
 
+    /**
+	 * The repaint method will call paintComponent and paint out all the components of the design
+	 * @param g - the graphics in which the design is being painted with
+	 */
     public void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
@@ -174,6 +208,13 @@ public class DecoratedBoard extends JPanel implements BoardDesigner{
         g2.drawString("MANCALA A", 300, -1000);
     }
     
+    /**
+     * Will draw the stones in each pit.
+     * @param g2- the graphics in which the design is being painted with
+     * @param numberOfStones - the number of stones that need to be drawn
+     * @param xPit - the xAxis of the stones
+     * @param yPit = the yAxis of the stones
+     */
     public void drawStonesOfPit(Graphics2D g2, int numberOfStones,int xPit,int yPit)
     {
         int summer=0;
@@ -193,6 +234,13 @@ public class DecoratedBoard extends JPanel implements BoardDesigner{
         }
     }
     
+    /**
+     * Will draw the stones in the biggest mancala pit
+     * @param g2- the graphics in which the design is being painted with
+     * @param numberOfStones - the number of stones that need to be drawn
+     * @param xPit - the xAxis of the stones
+     * @param yPit = the yAxis of the stones
+     */
     public void drawStonesOfMancala(Graphics2D g2, int numberOfStones,int xPit,int yPit)
     {
         int x = 0;
@@ -213,11 +261,19 @@ public class DecoratedBoard extends JPanel implements BoardDesigner{
         }
     }
 
+    /**
+     * Sets the amount of stones in the pit
+     * @param pitNumber - the amount of stones in the pit
+     */
     public void setPitStone(int pitNumber)
     {
         board.moveStones(board.getBoard().get(pitNumber));
     }
 
+    /**
+     * Sets every pit to have these amount of stones
+     * @param stoneNumber - the amount of stones in every pit
+     */
     public void setAllPitStones(int stoneNumber)
     {
         board.setBoard(stoneNumber);
