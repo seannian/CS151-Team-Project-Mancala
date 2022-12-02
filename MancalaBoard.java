@@ -1,7 +1,20 @@
+/**
+ * Fall 2022 CS151 Team Project
+ * Simple Mancala Board
+ * Instructor: Dr. Suneuy Kim
+ * 
+ * @author Sean Nian, Abdugafur Dalerzoda, Xianqiao Zhang, Aarushi  Gautam
+ * @version 1.0 12/1/2022
+ */
+
 import java.util.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * The model of the board which contains the data of the MancalaBoard.
+ * Stores data in an Arraylist and has two players which views detecting if the data has changed
+ */
 public class MancalaBoard 
 {
 	private ArrayList<Pit> board;
@@ -12,6 +25,10 @@ public class MancalaBoard
 	private ArrayList<ChangeListener> listeners;
 	private boolean finished;
 	
+	/**
+	 * Creates a MancalaBoard using ArrayLists of pits to store data
+	 * @param numStones - number of stones in each pit
+	 */
 	public MancalaBoard(int numStones)
 	{
 		finished = false;
@@ -24,11 +41,19 @@ public class MancalaBoard
 		System.out.println("Player B turn: " + player2.hasTurn());
 	}
 	
+	/**
+	 * Attaches a ChangeListener to the model to see if the data has changed
+	 * @param listener - the ChangeListener being attached
+	 * postcondition: a change listener will be added to the board
+	 */
 	public void attach(ChangeListener listener)
 	{
 		listeners.add(listener);
 	}
 	
+	/**
+	 * Helper method that initializes the ArrayLists of the board.
+	 */
 	public void initializeBoard()
 	{
 		board = new ArrayList<Pit>();
@@ -42,6 +67,10 @@ public class MancalaBoard
 		addCorrelation(board);
 	}
 	
+	/**
+	 * Helper method that sets the number of stones in each pit
+	 * @param numStones - number of stones in each pit
+	 */
 	public void setBoard(int numStones)
 	{
 		for(int i = 0; i < 14; i++)
@@ -58,6 +87,10 @@ public class MancalaBoard
 		}
 	}
 	
+	/**
+	 * Gives each pit a correlation to see which pit correlates to which in the steal function.
+	 * @param tempBoard - the ArrayList that needs correlations to be added
+	 */
 	public void addCorrelation(ArrayList<Pit> tempBoard)
 	{
 		int j = 12;
@@ -76,6 +109,12 @@ public class MancalaBoard
 		}
 	}
 	
+	/**
+	 * Checks if a player has stolen the other player's stones
+	 * @param player - the player that is attempting to steal
+	 * @param lastPitNumber - the last pit a stone has entered
+	 * postcondition: If successful, stones will be moved into the player who has attempted to steal's mancala pit
+	 */
 	public void checkSteal(Player player, int lastPitNumber)
 	{
 		Pit pit = board.get(lastPitNumber);
@@ -108,6 +147,11 @@ public class MancalaBoard
 		}
 	}
 	
+	/**
+	 * Moves the stones in a selected pit
+	 * @param pit - the pit that was selected to have stones moved from
+	 * postcondition: depending on where the last stone lands, the many variables, such as player turns, finished, and the board itself will change
+	 */
 	public void moveStones(Pit pit)
 	{
 		setPreviousBoard();
@@ -191,11 +235,19 @@ public class MancalaBoard
 		}
 	}
 	
+	/**
+	 * Checks to see if the Mancala game is done
+	 * @return finished - if the Mancala game is over
+	 */
 	public boolean isFinished()
 	{
 		return finished;
 	}
 	
+	/**
+	 * Sets the previous board to the current one
+	 * postcondition: the previous board is set to the current board
+	 */
 	public void setPreviousBoard()
 	{
 		ArrayList<Pit> tempBoard = new ArrayList<Pit>();
@@ -207,6 +259,11 @@ public class MancalaBoard
 		addCorrelation(previousBoard);
 	}
 	
+	/**
+	 * Sets the current board to the previous, will happen if undo is called
+	 * precondition: previous board must exist
+	 * postcondition: the board is set to the previous one and the turn is given to the previous player, and previous board is cleared
+	 */
 	public void setCurrentBoardToPreviousBoard()
 	{
 		ArrayList<Pit> tempBoard = new ArrayList<Pit>();
@@ -219,6 +276,10 @@ public class MancalaBoard
 		previousBoard.clear();
 	}
 	
+	/**
+	 * Undos if the player has enough undos left and a previous board exists
+	 * postcondition: the board will be set to the previous board and the previous player will get their turn back
+	 */
 	//The player that JUST made a move can undo before the other player makes their move
 	public void undo()
 	{
@@ -266,6 +327,10 @@ public class MancalaBoard
 		}
 	}
 	
+	/**
+	 * Checks if the pits are empty
+	 * @return - a boolean true or false if the pits are empty (not including the mancala pits)
+	 */
 	public boolean checkIfBoardIsEmpty()
 	{
 		boolean check = true;
@@ -279,6 +344,10 @@ public class MancalaBoard
 		return check;
 	}
 	
+	/**
+	 * Checks if player 1's side is empty
+	 * @return a boolean true or false if player 1's side is empty
+	 */
 	public boolean player1SideEmpty()
 	{
 		boolean check = true;
@@ -292,6 +361,10 @@ public class MancalaBoard
 		return check;
 	}
 	
+	/**
+	 * Checks if player 2's side is empty
+	 * @return a boolean true or false if player 2's side is empty
+	 */
 	public boolean player2SideEmpty()
 	{
 		boolean check = true;
@@ -305,6 +378,9 @@ public class MancalaBoard
 		return check;
 	}
 	
+	/**
+	 * Empties player 1's side if player 2 does not have any more stones in his pits 
+	 */
 	public void emptyPlayer1Side()
 	{
 		int size = 0;
@@ -316,6 +392,9 @@ public class MancalaBoard
 		board.get(6).addStones(size);
 	}
 	
+	/**
+	 * Empties player 2's side if player 1 does not have any more stones in his pits 
+	 */
 	public void emptyPlayer2Side()
 	{
 		int size = 0;
@@ -327,6 +406,10 @@ public class MancalaBoard
 		board.get(13).addStones(size);
 	}
 	
+	/**
+	 * Checks for the winner at the end of the game
+	 * @return a string that announces the winner
+	 */
 	public String checkWinner()
 	{
 		if(board.get(6).getSize() > board.get(13).getSize())
@@ -343,11 +426,19 @@ public class MancalaBoard
 		}
 	}
 	
+	/**
+	 * Returns the state of the current board 
+	 * @return the current board
+	 */
 	public ArrayList<Pit> getBoard()
 	{
 		return board;
 	}
 	
+	/**
+	 * Returns the player with the turn
+	 * @return - the player with the turn
+	 */
 	public Player getPlayerWithTurn()
 	{
 		if(player1.hasTurn())
@@ -360,16 +451,28 @@ public class MancalaBoard
 		}
 	}
 	
+	/**
+	 * Returns the player who had the last turn
+	 * @return - player who had the last turn
+	 */
 	public Player getPlayerWithLastTurn()
 	{
 		return playerWithLastTurn;
 	}
 	
+	/**
+	 * Returns player1
+	 * @return - player1
+	 */
 	public Player getPlayer1()
 	{
 		return player1;
 	}
 	
+	/**
+	 * Returns player2
+	 * @return - player2
+	 */
 	public Player getPlayer2()
 	{
 		return player2;
