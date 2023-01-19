@@ -23,3 +23,10 @@ Design 1:
 Design 2:
 ![Screen Shot 2023-01-19 at 3 42 48 PM](https://user-images.githubusercontent.com/64993553/213587441-0fac70f1-b959-4bcb-986e-2e6ff3b15cc2.png)
 
+
+Class Diagram:
+![Screen Shot 2023-01-19 at 3 53 33 PM](https://user-images.githubusercontent.com/64993553/213587836-62fbe6f8-e14b-4ed1-b891-b1b9ade981de.png)
+
+Sequence Diagram:
+![Screen Shot 2023-01-19 at 3 54 43 PM](https://user-images.githubusercontent.com/64993553/213587972-76d99311-64eb-4d8d-9e93-a6e9951c6636.png)
+
