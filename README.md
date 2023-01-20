@@ -1,4 +1,8 @@
 # CS151-Team-Project-Mancala
+Members	Position	GitHub
+Spartak Gevorgyan	Lead Software Engineer	artak10t
+Shohin Abdulkhamidov	Software Engineer	shohinsan
+Vladislav Semenyutin	Software Engineer	skiffin_git
 CS151 Team Project / Mancala / Instructor: Dr. Kim
 
 Date: December 8, 2022
