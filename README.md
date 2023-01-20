@@ -1,9 +1,12 @@
 # CS151-Team-Project-Mancala
-Members	Position	GitHub
-Spartak Gevorgyan	Lead Software Engineer	artak10t
-Shohin Abdulkhamidov	Software Engineer	shohinsan
-Vladislav Semenyutin	Software Engineer	skiffin_git
+
 CS151 Team Project / Mancala / Instructor: Dr. Kim
+
+| Members               | Positions        | GitHub  |
+| --------------------  |:----------------:| -------:|
+| Abdugafur Dalerzoda   | Frontend Engineer|  [@abdu](https://github.com/Abdugafur111)  |
+| Sean Nian             | Backend Engineer |  [@sean](https://github.com/seannian)   |
+| Elena                 | Frontend Engineer|  [@elena](https://github.com/XianqiaoZhang)   |
 
 Date: December 8, 2022
 
